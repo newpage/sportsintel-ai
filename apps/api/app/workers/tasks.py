@@ -2,6 +2,7 @@ from celery.utils.log import get_task_logger
 from sqlalchemy import select
 
 from app.db.session import Base, SessionLocal, engine
+from app.models.audit import ProviderRun
 from app.models.sports import League, Season, Team
 from app.models.lms import SurvivorPool
 from app.workers.celery_app import celery
@@ -15,6 +16,16 @@ NFL_TEAMS = [('ARI', 'Arizona Cardinals', 'Arizona', 'NFC', 'West'), ('ATL', 'At
 def seed_foundation():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
+    run = ProviderRun(
+        provider="foundation",
+        dataset="nfl_catalog",
+        status="running",
+        records_received=32,
+        records_written=0,
+    )
+    db.add(run)
+    db.commit()
+    db.refresh(run)
     try:
         league = db.scalar(select(League).where(League.code == "NFL"))
         if not league:
@@ -62,6 +73,10 @@ def seed_foundation():
                 )
             )
 
+        run.status = "success"
+        run.records_written = 32
+        from datetime import datetime, timezone
+        run.completed_at = datetime.now(timezone.utc)
         db.commit()
         logger.info("NFL and LMS foundation seeded")
         return {"status": "success", "teams": 32}
