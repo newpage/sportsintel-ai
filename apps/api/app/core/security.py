@@ -23,6 +23,7 @@ def verify_password_and_update(
 ) -> tuple[bool, str | None]:
     return password_hasher.verify_and_update(password, password_hash)
 
+
 def create_access_token(user_id: int, email: str, role: str, mfa: bool = False) -> str:
     now = datetime.now(timezone.utc)
     payload = {

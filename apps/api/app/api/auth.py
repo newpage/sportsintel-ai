@@ -133,29 +133,19 @@ def login(body: LoginRequest, request: Request, response: Response, db: Session 
         raise HTTPException(status_code=423, detail="Account is temporarily locked")
     password_valid = False
     updated_password_hash = None
-
     if user:
         password_valid, updated_password_hash = verify_password_and_update(
-           body.password,
-           user.password_hash,
-       )
-
+            body.password,
+            user.password_hash,
+        )
     if not user or not password_valid:
-       if user:
-          user.failed_login_count += 1
-
-          if user.failed_login_count >= settings.login_max_attempts:
-              user.locked_until = now + timedelta(
-                  minutes=settings.login_lockout_minutes
-              )
-
-          audit(db, user.id, "LOGIN_FAILED", request)
-          db.commit()
-
-       raise HTTPException(
-          status_code=401,
-          detail="Invalid email or password",
-       )
+        if user:
+            user.failed_login_count += 1
+            if user.failed_login_count >= settings.login_max_attempts:
+                user.locked_until = now + timedelta(minutes=settings.login_lockout_minutes)
+            audit(db, user.id, "LOGIN_FAILED", request)
+            db.commit()
+        raise HTTPException(status_code=401, detail="Invalid email or password")
     if not user.is_active:
         raise HTTPException(status_code=403, detail="Account is inactive")
     if user.mfa_enabled:

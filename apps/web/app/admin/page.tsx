@@ -53,6 +53,7 @@ export default function AdminPage() {
         <div className="eyebrow">Operations</div>
         <h1>Admin Console</h1>
         <p>Platform health, data ingestion, user access, and operational visibility.</p>
+<div className="actions"><a href="/admin/providers">Manage Providers</a></div>
       </section>
 
       <section className="status-row">
