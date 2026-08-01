@@ -10,7 +10,7 @@ from app.api.dependencies import require_admin
 from app.core.config import settings
 from app.db.session import get_db
 from app.models.audit import ProviderRun
-from app.models.auth import AuditLog, User
+from app.models.auth import AuditLog, RefreshToken, SecurityToken, User
 from app.models.lms import SurvivorPool
 from app.models.sports import Game, League, Player, Team
 
@@ -49,6 +49,8 @@ def overview(
         "games": db.scalar(select(func.count()).select_from(Game)) or 0,
         "lms_pools": db.scalar(select(func.count()).select_from(SurvivorPool)) or 0,
         "provider_runs": db.scalar(select(func.count()).select_from(ProviderRun)) or 0,
+        "active_refresh_tokens": db.scalar(select(func.count()).select_from(RefreshToken).where(RefreshToken.revoked_at.is_(None))) or 0,
+        "pending_security_tokens": db.scalar(select(func.count()).select_from(SecurityToken).where(SecurityToken.used_at.is_(None))) or 0,
     }
 
     return {
