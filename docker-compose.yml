@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    networks: [sportsintel]
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    networks: [sportsintel]
+
+  api:
+    build: ./apps/api
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${API_HOST}:${API_PORT}:8000"
+    volumes:
+      - ./apps/api:/app
+    restart: unless-stopped
+    networks: [sportsintel]
+
+  worker:
+    build: ./apps/api
+    command: celery -A app.workers.celery_app.celery worker --loglevel=INFO
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+    restart: unless-stopped
+    networks: [sportsintel]
+
+  beat:
+    build: ./apps/api
+    command: celery -A app.workers.celery_app.celery beat --loglevel=INFO
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+    restart: unless-stopped
+    networks: [sportsintel]
+
+  web:
+    build: ./apps/web
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "${WEB_HOST}:${WEB_PORT}:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    restart: unless-stopped
+    networks: [sportsintel]
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  sportsintel:
+    driver: bridge
