@@ -59,3 +59,17 @@ Admin APIs:
 - `GET /api/v1/admin/users`
 - `GET /api/v1/admin/provider-runs`
 - `GET /api/v1/admin/audit-logs`
+
+## Sprint 1.2 security foundation
+
+- Argon2 password hashing via pwdlib
+- 15-minute access tokens
+- Rotating 30-day refresh tokens with reuse-family revocation
+- Redis-backed login throttling
+- Temporary account lockout
+- Email verification tokens
+- Password-reset tokens
+- Optional TOTP MFA
+- Authentication audit logs
+
+Because development compatibility is not required, recreate existing users/admins after resetting the database.

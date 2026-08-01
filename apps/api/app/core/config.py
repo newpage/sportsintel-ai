@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     app_name: str = "SportsIntel AI API"
     app_env: str = "development"
-    app_version: str = "0.1.0"
+    app_version: str = "0.2.0"
     log_level: str = "INFO"
 
     public_url: str = "http://localhost:3300"
@@ -25,15 +25,24 @@ class Settings(BaseSettings):
     redis_db: int = 0
 
     jwt_secret: str = Field(min_length=32)
-    jwt_expire_minutes: int = 1440
-    cors_origins: str = "http://localhost:3300"
+    jwt_expire_minutes: int = 1440  # legacy input, no longer used for access tokens
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
+    email_verification_expire_hours: int = 24
+    password_reset_expire_minutes: int = 30
+    login_max_attempts: int = 5
+    login_lockout_minutes: int = 15
+    mfa_issuer: str = "SportsIntel AI"
+    auth_return_tokens_in_response: bool = True
 
+    cors_origins: str = "http://localhost:3300"
     sports_data_provider: str = "demo"
     ollama_url: str = "http://host.docker.internal:11434"
     llm_model: str = "qwen3:14b"
 
     admin_bootstrap_email: str = "admin@discovera.ai"
     access_token_cookie: str = "sportsintel_access_token"
+    refresh_token_cookie: str = "sportsintel_refresh_token"
     access_token_secure: bool = False
 
     model_config = SettingsConfigDict(
@@ -47,10 +56,7 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         user = quote_plus(self.db_user)
         password = quote_plus(self.db_password)
-        return (
-            f"postgresql+psycopg://{user}:{password}"
-            f"@{self.db_host}:{self.db_port}/{self.db_name}"
-        )
+        return f"postgresql+psycopg://{user}:{password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
     @property
     def redis_url(self) -> str:

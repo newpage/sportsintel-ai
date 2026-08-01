@@ -35,6 +35,7 @@ export default function LoginPage() {
         <label>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></label>
         <label>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
         {error && <div className="error">{error}</div>}
+        <a href="/forgot-password">Forgot password?</a>
         <button type="submit">Sign in</button>
       </form>
     </main>
