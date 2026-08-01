@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     ollama_url: str = "http://host.docker.internal:11434"
     llm_model: str = "qwen3:14b"
 
+    admin_bootstrap_email: str = "admin@discovera.ai"
+    access_token_cookie: str = "sportsintel_access_token"
+    access_token_secure: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

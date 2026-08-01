@@ -6,7 +6,7 @@ const features = [
 
 export default function HomePage() {
   return (
-    <main>
+    <main><nav><strong>SportsIntel AI</strong><div><a href="/lms">LMS</a><a href="/login">Sign In</a><a href="/admin">Admin</a></div></nav>
       <section className="hero">
         <div className="eyebrow">NFL-first intelligence platform</div>
         <h1>SportsIntel AI</h1>

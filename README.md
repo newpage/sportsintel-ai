@@ -41,3 +41,21 @@ Apache proxies:
 - `/` → `127.0.0.1:3300`
 
 See `infrastructure/apache/sportsintel.discovera.ai.conf`.
+
+## Create the first administrator
+
+```bash
+docker compose exec api python -m app.cli.create_admin   --email admin@discovera.ai
+```
+
+Then open:
+
+- Login: `https://sportsintel.discovera.ai/login`
+- Admin: `https://sportsintel.discovera.ai/admin`
+
+Admin APIs:
+
+- `GET /api/v1/admin/overview`
+- `GET /api/v1/admin/users`
+- `GET /api/v1/admin/provider-runs`
+- `GET /api/v1/admin/audit-logs`
