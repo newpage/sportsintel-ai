@@ -3,3 +3,5 @@ from app.models.lms import SurvivorPool, SurvivorEntry, SurvivorPick, SurvivorRe
 from app.models.audit import ProviderRun
 
 from app.models.auth import User, RefreshToken, SecurityToken, AuditLog
+
+from app.models.provider import ProviderConfiguration, ProviderDatasetState, ProviderExecution

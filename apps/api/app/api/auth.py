@@ -15,8 +15,7 @@ from app.core.security import (
     hash_opaque_token,
     hash_password,
     new_token_family,
-    password_needs_rehash,
-    verify_password,
+    verify_password_and_update,
 )
 from app.db.session import get_db
 from app.models.auth import AuditLog, RefreshToken, SecurityToken, User
@@ -132,7 +131,14 @@ def login(body: LoginRequest, request: Request, response: Response, db: Session 
     now = datetime.now(timezone.utc)
     if user and user.locked_until and user.locked_until > now:
         raise HTTPException(status_code=423, detail="Account is temporarily locked")
-    if not user or not verify_password(body.password, user.password_hash):
+    password_valid = False
+    updated_password_hash = None
+    if user:
+        password_valid, updated_password_hash = verify_password_and_update(
+            body.password,
+            user.password_hash,
+        )
+    if not user or not password_valid:
         if user:
             user.failed_login_count += 1
             if user.failed_login_count >= settings.login_max_attempts:
@@ -146,8 +152,8 @@ def login(body: LoginRequest, request: Request, response: Response, db: Session 
         if not body.mfa_code or not pyotp.TOTP(user.mfa_secret).verify(body.mfa_code, valid_window=1):
             audit(db, user.id, "MFA_FAILED", request); db.commit()
             raise HTTPException(status_code=401, detail="Valid MFA code required")
-    if password_needs_rehash(user.password_hash):
-        user.password_hash = hash_password(body.password)
+    if updated_password_hash:
+        user.password_hash = updated_password_hash
     user.failed_login_count = 0; user.locked_until = None; user.last_login_at = now
     clear_login_attempts(email, ip)
     audit(db, user.id, "USER_LOGIN", request)
