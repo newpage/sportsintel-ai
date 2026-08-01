@@ -73,3 +73,19 @@ Admin APIs:
 - Authentication audit logs
 
 Because development compatibility is not required, recreate existing users/admins after resetting the database.
+
+## Provider Registry
+
+Open the provider console:
+
+```text
+https://sportsintel.discovera.ai/admin/providers
+```
+
+Run the bundled NFL team provider through the API:
+
+```bash
+curl -X POST   https://sportsintel.discovera.ai/api/v1/admin/providers/nfl.demo/run/TEAM   -H "Authorization: Bearer $TOKEN"
+```
+
+See `docs/providers.md` for the provider contract and licensing metadata.

@@ -17,12 +17,11 @@ def hash_password(password: str) -> str:
     return password_hasher.hash(password)
 
 
-def verify_password(password: str, password_hash: str) -> bool:
-    return password_hasher.verify(password, password_hash)
-
-
-def password_needs_rehash(password_hash: str) -> bool:
-    return password_hasher.check_needs_rehash(password_hash)
+def verify_password_and_update(
+    password: str,
+    password_hash: str,
+) -> tuple[bool, str | None]:
+    return password_hasher.verify_and_update(password, password_hash)
 
 
 def create_access_token(user_id: int, email: str, role: str, mfa: bool = False) -> str:
