@@ -13,6 +13,7 @@ export type Recommendation = {
   trend: number;
   summary: string;
   evidence?: string[];
+  game_slug?: string;
 };
 
 function tone(edge: number) {
@@ -39,7 +40,7 @@ export function RecommendationCard({ item, compact = false }: { item: Recommenda
       <div className="confidence-track"><span style={{ width: `${item.confidence}%` }} /></div>
       <p>{item.summary}</p>
       {!compact && item.evidence && <ul className="evidence-list">{item.evidence.slice(0, 3).map(value => <li key={value}>{value}</li>)}</ul>}
-      <div className="card-actions"><Link href="/survivor">Why</Link><Link href="/survivor#compare">Compare</Link></div>
+      <div className="card-actions"><Link href={item.game_slug ? `/games/${item.game_slug}` : "/survivor"}>Game analysis</Link>{item.abbreviation && <Link href="/survivor#compare">Compare</Link>}</div>
     </article>
   );
 }

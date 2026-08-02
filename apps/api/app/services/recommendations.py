@@ -23,6 +23,18 @@ class TeamSeed:
     warnings: tuple[str, ...]
 
 
+
+GAME_SLUGS = {
+    "BUF": "nyj-at-buf",
+    "SEA": "ari-at-sea",
+    "PHI": "nyg-at-phi",
+    "DET": "chi-at-det",
+    "BAL": "cle-at-bal",
+    "KC": "lv-at-kc",
+    "SF": "lar-at-sf",
+    "GB": "min-at-gb",
+}
+
 LAUNCH_SEEDS: tuple[TeamSeed, ...] = (
     TeamSeed("BUF", "NYJ", "Home", 0.86, 78, 29, 3, "LOW", ("Strong home matchup", "Stable quarterback situation", "Opponent offensive uncertainty", "Favorable rest profile"), ("Division matchup",)),
     TeamSeed("SEA", "ARI", "Home", 0.82, 59, 11, 4, "LOW", ("Strong matchup profile", "Low future opportunity cost", "Home-field advantage", "Low projected public usage"), ("Opponent pace uncertainty",)),
@@ -77,6 +89,7 @@ class RecommendationService:
             recommendations.append(
                 {
                     "team_id": team.id if team else None,
+                    "game_slug": GAME_SLUGS.get(seed.abbreviation),
                     "team": team.name if team else seed.abbreviation,
                     "abbreviation": seed.abbreviation,
                     "opponent": seed.opponent,
@@ -108,16 +121,16 @@ class RecommendationService:
 
     def spread_rankings(self) -> list[dict]:
         return [
-            {"matchup": "DET vs CHI", "selection": "Detroit -4.0", "edge": 88, "confidence": 82, "risk": "LOW", "trend": 2, "summary": "Detroit's home efficiency and matchup profile create the clearest early spread signal."},
-            {"matchup": "BUF vs NYJ", "selection": "Buffalo -6.5", "edge": 86, "confidence": 80, "risk": "MEDIUM", "trend": 1, "summary": "Buffalo holds advantages at quarterback and offensive continuity, with division risk remaining."},
-            {"matchup": "PHI vs NYG", "selection": "Philadelphia -5.5", "edge": 83, "confidence": 78, "risk": "MEDIUM", "trend": -1, "summary": "Philadelphia's line play supports the number, but divisional familiarity lowers confidence."},
+            {"game_slug": "chi-at-det", "matchup": "DET vs CHI", "selection": "Detroit -4.0", "edge": 88, "confidence": 82, "risk": "LOW", "trend": 2, "summary": "Detroit's home efficiency and matchup profile create the clearest early spread signal."},
+            {"game_slug": "nyj-at-buf", "matchup": "BUF vs NYJ", "selection": "Buffalo -6.5", "edge": 86, "confidence": 80, "risk": "MEDIUM", "trend": 1, "summary": "Buffalo holds advantages at quarterback and offensive continuity, with division risk remaining."},
+            {"game_slug": "nyg-at-phi", "matchup": "PHI vs NYG", "selection": "Philadelphia -5.5", "edge": 83, "confidence": 78, "risk": "MEDIUM", "trend": -1, "summary": "Philadelphia's line play supports the number, but divisional familiarity lowers confidence."},
         ]
 
     def totals_rankings(self) -> list[dict]:
         return [
-            {"matchup": "DET vs CHI", "selection": "Over 47.5", "edge": 87, "confidence": 81, "risk": "LOW", "trend": 3, "summary": "Detroit pace and red-zone efficiency support an above-market scoring environment."},
-            {"matchup": "KC vs LV", "selection": "Over 49.0", "edge": 84, "confidence": 77, "risk": "MEDIUM", "trend": 1, "summary": "Kansas City's offensive ceiling is strong, while the total already prices in substantial scoring."},
-            {"matchup": "BAL vs CLE", "selection": "Under 44.5", "edge": 81, "confidence": 76, "risk": "MEDIUM", "trend": -1, "summary": "Defensive matchup strength and divisional familiarity favor a lower-scoring profile."},
+            {"game_slug": "chi-at-det", "matchup": "DET vs CHI", "selection": "Over 47.5", "edge": 87, "confidence": 81, "risk": "LOW", "trend": 3, "summary": "Detroit pace and red-zone efficiency support an above-market scoring environment."},
+            {"game_slug": "lv-at-kc", "matchup": "KC vs LV", "selection": "Over 49.0", "edge": 84, "confidence": 77, "risk": "MEDIUM", "trend": 1, "summary": "Kansas City's offensive ceiling is strong, while the total already prices in substantial scoring."},
+            {"game_slug": "cle-at-bal", "matchup": "BAL vs CLE", "selection": "Under 44.5", "edge": 81, "confidence": 76, "risk": "MEDIUM", "trend": -1, "summary": "Defensive matchup strength and divisional familiarity favor a lower-scoring profile."},
         ]
 
     def today(self) -> dict:
