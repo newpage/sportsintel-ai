@@ -89,3 +89,19 @@ curl -X POST   https://sportsintel.discovera.ai/api/v1/admin/providers/nfl.demo/
 ```
 
 See `docs/providers.md` for the provider contract and licensing metadata.
+
+## Milestone 4: TODAY + Survivor
+
+Authenticated product routes:
+
+- `/today` — morning briefing, changes, top Survivor, spread and totals edges
+- `/survivor` — ranked Survivor candidates and two-team comparison
+- `/lms` — redirects to `/survivor`
+
+Protected APIs:
+
+- `GET /api/v1/today`
+- `GET /api/v1/survivor/recommendations`
+
+The initial recommendation service is deterministic and marked `launch-model`.
+It is intentionally replaceable by live schedule, odds, injury and weather inputs.
