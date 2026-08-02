@@ -19,7 +19,7 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      const target = searchParams.get("returnTo") || (result.user.role === "ADMIN" ? "/admin" : "/");
+      const target = searchParams.get("returnTo") || "/today";
       router.push(target);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to sign in");
