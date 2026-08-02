@@ -105,3 +105,19 @@ Protected APIs:
 
 The initial recommendation service is deterministic and marked `launch-model`.
 It is intentionally replaceable by live schedule, odds, injury and weather inputs.
+
+## Milestone 5 — Game Intelligence
+
+Authenticated users can now open:
+
+- `/games` — Week 1 game intelligence board
+- `/games/{slug}` — Complete matchup intelligence
+
+Protected APIs:
+
+- `GET /api/v1/games`
+- `GET /api/v1/games/{slug}`
+
+The launch model combines matchup context, market inputs, weather, rest, travel,
+injury counts, and Survivor/Spread/Total strategy signals. Live provider data can
+replace these launch inputs without changing the frontend contracts.
