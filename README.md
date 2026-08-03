@@ -121,3 +121,17 @@ Protected APIs:
 The launch model combines matchup context, market inputs, weather, rest, travel,
 injury counts, and Survivor/Spread/Total strategy signals. Live provider data can
 replace these launch inputs without changing the frontend contracts.
+
+## Release 0.7 — Spread and Totals Centers
+
+Authenticated product routes:
+
+- `/spread` — ranked point-spread opportunities with filtering and comparison
+- `/totals` — ranked over/under opportunities with environmental context
+
+Protected APIs:
+
+- `GET /api/v1/spread`
+- `GET /api/v1/totals`
+
+Both centers use the existing launch model and link directly to Game Intelligence.
