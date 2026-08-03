@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import { GlobalSearch } from "./GlobalSearch";
 
 const navigation = [
   ["/today", "Today", "◉"],
@@ -11,6 +12,7 @@ const navigation = [
   ["/totals", "Totals", "∑"],
   ["/teams", "Teams", "◫"],
   ["/games", "Games", "▦"],
+  ["/watchlist", "Watchlist", "★"],
   ["/assistant", "Assistant", "✦"],
 ];
 
@@ -38,6 +40,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <section className="app-stage">
         <header className="topbar">
           <div><span className="live-dot" /> NFL 2026 · Week 1</div>
+          <GlobalSearch />
           <div className="topbar-actions"><span>Launch model</span><a href="/login">Account</a></div>
         </header>
         <div className="app-content">{children}</div>

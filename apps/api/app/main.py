@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import admin, assistant, auth, games, lms, markets, platform, providers, today
+from app.api import admin, auth, games, lms, markets, platform, providers, search, teams, today, watchlist
 from app.core.config import settings
 from app.db.session import Base, engine
 
@@ -36,7 +36,9 @@ app.include_router(lms.router, prefix="/api/v1")
 app.include_router(today.router, prefix="/api/v1")
 app.include_router(games.router, prefix="/api/v1")
 app.include_router(markets.router, prefix="/api/v1")
-app.include_router(assistant.router, prefix="/api/v1")
+app.include_router(teams.router, prefix="/api/v1")
+app.include_router(search.router, prefix="/api/v1")
+app.include_router(watchlist.router, prefix="/api/v1")
 
 
 @app.get("/health")

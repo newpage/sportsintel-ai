@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { AppShell } from "../../../components/AppShell";
 import { RecommendationCard } from "../../../components/RecommendationCard";
 import { Widget } from "../../../components/Widget";
+import { WatchlistButton } from "../../../components/WatchlistButton";
 import { apiFetch } from "../../../lib/api";
 
 type GameDetail = any;
@@ -24,7 +25,7 @@ export default function GameDetailPage() {
 
   return <AppShell>{error ? <div className="page-error"><h1>Unable to load game</h1><p>{error}</p></div> : !game ? <div className="skeleton-shell"><div/><div/><div/></div> : <>
     <div className="game-hero">
-      <div className="game-hero-nav"><Link href="/games">← All games</Link><span>NFL Week {game.week} · {game.status}</span></div>
+      <div className="game-hero-nav"><Link href="/games">← All games</Link><div><WatchlistButton entityType="GAME" entityKey={game.slug} label={`${game.away.abbreviation} at ${game.home.abbreviation}`} /><span>NFL Week {game.week} · {game.status}</span></div></div>
       <div className="game-matchup-hero">
         <TeamBlock team={game.away} label="Away" />
         <div className="game-kickoff"><span>{game.kickoff.day}</span><strong>{game.kickoff.time}</strong><small>{game.kickoff.venue}<br/>{game.kickoff.city}</small></div>
@@ -62,7 +63,7 @@ export default function GameDetailPage() {
   </>}</AppShell>;
 }
 
-function TeamBlock({ team, label }: { team: any; label: string }) { return <div className="team-hero-block"><span>{label}</span><strong>{team.abbreviation}</strong><h2>{team.name}</h2><small>{team.conference} {team.division}</small></div>; }
+function TeamBlock({ team, label }: { team: any; label: string }) { return <div className="team-hero-block"><span>{label}</span><Link href={`/teams/${team.abbreviation.toLowerCase()}`}><strong>{team.abbreviation}</strong><h2>{team.name}</h2></Link><small>{team.conference} {team.division}</small></div>; }
 function Metric({ label, value }: { label: string; value: string | number }) { return <div className="metric"><span>{label}</span><strong>{value}</strong></div>; }
 function Context({ label, value }: { label: string; value: string | number }) { return <div><span>{label}</span><strong>{value}</strong></div>; }
 function EmptySignal({ title }: { title: string }) { return <div className="empty-signal"><span>{title}</span><strong>Monitoring</strong><p>No launch-model edge is published for this strategy yet.</p></div>; }

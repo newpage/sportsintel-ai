@@ -5,3 +5,4 @@ from app.models.audit import ProviderRun
 from app.models.auth import User, RefreshToken, SecurityToken, AuditLog
 
 from app.models.provider import ProviderConfiguration, ProviderDatasetState, ProviderExecution
+from app.models.watchlist import WatchlistItem
